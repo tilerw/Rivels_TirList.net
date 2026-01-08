@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rivels Tiers - Rankings</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0b14 0%, #1a0b2e 50%, #0a0b14 100%);
+            background-attachment: fixed;
+            color: #e5e7eb;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 0, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(15, 17, 23, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 32px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3f3f3f 0%, #d946ef 50%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+            }
+            to {
+                filter: drop-shadow(0 0 25px rgba(217, 70, 239, 0.6));
+            }
+        }
+
+        .nav-section {
+            background: rgba(8, 9, 13, 0.6);
+            backdrop-filter: blur(15px);
+            padding: 0;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 50;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin: 0 auto;
+            max-width: 1400px;
+            padding: 12px 40px;
+            overflow-x: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(139, 92, 246, 0.3) transparent;
+        }
+
+        .nav-tab {
+            position: relative;
+            padding: 18px 36px;
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            color: #9ca3af;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            overflow: hidden;
+        }
+
+        .nav-tab::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(217, 70, 239, 0.2));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-tab:hover {
+            color: #ffffff;
+            background: rgba(139, 92, 246, 0.15);
+            border-color: rgba(139, 92, 246, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .nav-tab:hover::before {
+            opacity: 1;
+        }
+
+        .nav-tab.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(217, 70, 239, 0.2));
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .table-wrapper {
+            background: rgba(15, 17, 23, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            box-shadow: 
+                0 25px 70px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(139, 92, 246, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(180deg, rgba(139, 92, 246, 0.12) 0%, rgba(139, 92, 246, 0.05) 100%);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        thead::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+        }
+
+        th {
+            padding: 24px 28px;
+            text-align: left;
+            font-weight: 800;
+            color: #d4d4d8;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-bottom: none;
+        }
+
+        td {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.08);
+            color: #f3f4f6;
+            font-size: 15.5px;
+        }
+
+        tbody tr {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            position: relative;
+        }
+
+        tbody tr::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #8b5cf6, #d946ef);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        tbody tr:hover::before {
+            transform: scaleY(1);
+        }
+
+        tbody tr:hover {
+            background: rgba(139, 92, 246, 0.1);
+            transform: translateX(8px);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.2);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rank-col {
+            font-weight: 900;
+            background: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 18px;
+            width: 100px;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);
+        }
+
+        .player-col {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+        }
+
+        .player-skin {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            image-rendering: pixelated;
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        tbody tr:hover .player-skin {
+            transform: scale(1.15) rotate(5deg);
+            border-color: rgba(139, 92, 246, 0.6);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .region-col {
+            color: #a1a1aa;
+            font-size: 13.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 6px 14px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .tier-badge {
+            display: inline-block;
+        }
+
+        .tier-badge img {
+            height: 50px;
+            width: auto;
+            vertical-align: middle;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        tbody tr:hover .tier-badge img {
+            transform: scale(1.2) rotate(-5deg);
+            filter: drop-shadow(0 8px 20px rgba(139, 92, 246, 0.5));
+        }
+
+        .footer {
+            text-align: center;
+            padding: 56px 20px;
+            color: #71717a;
+            font-size: 13.5px;
+            border-top: 1px solid rgba(139, 92, 246, 0.15);
+            margin-top: 100px;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .nav-tabs::-webkit-scrollbar-track {
+            background: rgba(139, 92, 246, 0.05);
+            border-radius: 3px;
+        }
+
+        .nav-tabs::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 3px;
+        }
+
+        .nav-tabs::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 0 20px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            .container {
+                padding: 32px 20px;
+            }
+
+            .nav-tabs {
+                padding: 8px 20px;
+                gap: 6px;
+            }
+
+            .nav-tab {
+                padding: 14px 24px;
+                font-size: 12.5px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th, td {
+                padding: 18px 16px;
+            }
+
+            th {
+                font-size: 10.5px;
+            }
+
+            .tier-badge img {
+                height: 40px;
+            }
+
+            .player-skin {
+                width: 36px;
+                height: 36px;
+            }
+
+            .rank-col {
+                font-size: 16px;
+            }
+        }
+
+        /* Loading state */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        tbody tr {
+            animation: fadeIn 0.4s ease forwards;
+            opacity: 0;
+        }
+
+        tbody tr:nth-child(1) { animation-delay: 0.05s; }
+        tbody tr:nth-child(2) { animation-delay: 0.1s; }
+        tbody tr:nth-child(3) { animation-delay: 0.15s; }
+        tbody tr:nth-child(4) { animation-delay: 0.2s; }
+        tbody tr:nth-child(5) { animation-delay: 0.25s; }
+        tbody tr:nth-child(n+6) { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">RIVELS TIERS</div>
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-tabs" id="navTabs">
+            <div class="nav-tab active" data-category="overall">Overall</div>
+            <div class="nav-tab" data-category="vanilla">Vanilla</div>
+            <div class="nav-tab" data-category="diasmp">DiaSmp</div>
+            <div class="nav-tab" data-category="sword">Sword</div>
+            <div class="nav-tab" data-category="mace">Mace</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Region</th>
+                        <th>Vanilla</th>
+                        <th>DiaSmp</th>
+                        <th>Sword</th>
+                        <th>Mace</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingsTable">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2029 Rivels Tiers.
+    </div>
+
+    <script>
+        const rankingsData = {
+            overall: [
+                { rank: 1, player: "ItzDob", username: "BlvckWlf", region: "NA", vanilla: "HT1", diasmp: "HT1", sword: "HT1", mace: "HT1" },
+                { rank: 2, player: "Mohamed_G", username: "xSeif_", region: "NA", vanilla: "HT2", diasmp: "HT2", sword: "HT1", mace: "LT1" },
+                { rank: 3, player: "Badie3", username: "Samorai_1", region: "NA", vanilla: "LT4", diasmp: "LT1", sword: "LT1", mace: "HT4" },
+                { rank: 4, player: "Malek", username: "MalekMC_", region: "NA", vanilla: "LT1", diasmp: "HT2", sword: "LT2", mace: "LT2" },
+                { rank: 5, player: "Brkoke", username: "Brkokeee", region: "NA", vanilla: "HT2", diasmp: "HT2", sword: "LT2", mace: "HT3" },
+                { rank: 6, player: "Mando", username: "Mando", region: "NA", vanilla: "LT2", diasmp: "HT2", sword: "HT2", mace: "HT3" },
+                { rank: 7, player: "Driplex", username: "Driplex", region: "NA", vanilla: "LT1",  diasmp: "ht3", sword: "ht3", mace: "ht3"},
+                { rank: 8, player: "Tyler", username: "its_Tyler4real", region: "NA", vanilla: "HT3", diasmp: "HT4", sword: "LT3", mace: "HT4" }
+            ],
+            vanilla: [
+                { rank: 1, player: "ItzDob", username: "BlvckWlf", region: "NA", tier: "HT1", tierType: "high" },
+                { rank: 2, player: "Malek", username: "MalekMC_", region: "NA", tier: "Lt1", tierType: "low" },
+                { rank: 3, player: "Driplex", username: "Driplex", region: "NA", tier: "LT1", tierType: "low" },
+                { rank: 4, player: "Mohamed_G", username: "xSeif_", region: "NA", tier: "HT2", tierType: "high" },
+                { rank: 5, player: "Brkoke", username: "Brkokeee", region: "NA", tier: "HT2", tierType: "high" },
+                { rank: 6, player: "Tyler", username: "its_Tyler4real", region: "NA", tier: "LT2", tierType: "low" },
+                { rank: 7, player: "Mando", username: "Mando", region: "NA", tier: "HT3", tierType: "high" },
+                { rank: 8, player: "Badie3", username: "Samorai_1", region: "NA", tier: "LT3", tierType: "low" }
+            ],
+            diasmp: [
+                { rank: 1, player: "ItzDob", username: "BlvckWlf", region: "NA", tier: "HT1", tierType: "high" },
+                { rank: 2, player: "Badie3", username: "Samorai_1", region: "NA", tier: "LT1", tierType: "low" },
+                { rank: 2, player: "Mohamed_G", username: "xSeif_", region: "NA", tier: "HT2", tierType: "high" },
+                { rank: 3, player: "Malek", username: "MalekMC_", region: "NA", tier: "HT2", tierType: "high" },
+                { rank: 4, player: "Mando", username: "Mando", region: "NA", tier: "HT2", tierType: "high" },
+                { rank: 5, player: "Brkoke", username: "Brkokeee", region: "NA", tier: "HT2", tierType: "high" },
+                { rank: 6, player: "Driplex", username: "Driplex", region: "NA", tier: "HT3", tierType: "high" },
+                { rank: 7, player: "Tyler", username: "its_Tyler4real", region: "NA", tier: "HT4", tierType: "high" }
+            ],
+            sword: [
+                { rank: 1, player: "ItzDob", username: "BlvckWlf", region: "NA", tier: "HT1", tierType: "high" },
+                { rank: 2, player: "Mohamed_G", username: "xSeif_", region: "NA", tier: "HT1", tierType: "high" },
+                { rank: 3, player: "Badie3", username: "Samorai_1", region: "NA", tier: "LT1", tierType: "low" },
+                { rank: 4, player: "Mando", username: "Mando", region: "NA", tier: "HT2", tierType: "high" },
+                { rank: 5, player: "Malek", username: "MalekMC_", region: "NA", tier: "LT2", tierType: "low" },
+                { rank: 6, player: "Brkoke", username: "Brkokeee", region: "NA", tier: "LT2", tierType: "low" },
+                { rank: 7, player: "Driplex", username: "Driplex", region: "NA", tier: "HT3", tierType: "high" },
+                { rank: 8, player: "Tyler", username: "its_Tyler4real", region: "NA", tier: "LT3", tierType: "low" }
+            ],
+            mace: [
+                { rank: 1, player: "ItzDob", username: "BlvckWlf", region: "NA", tier: "HT1", tierType: "high" },
+                { rank: 2, player: "Mohamed_G", username: "xSeif_", region: "NA", tier: "LT1", tierType: "low" },
+                { rank: 3, player: "Malek", username: "MalekMC_", region: "NA", tier: "LT2", tierType: "low" },
+                { rank: 4, player: "Mando", username: "Mando", region: "NA", tier: "HT3", tierType: "high" },
+                { rank: 5, player: "Brkoke", username: "Brkokeee", region: "NA", tier: "HT3", tierType: "high" },
+                { rank: 6, player: "Driplex", username: "Driplex", region: "NA", tier: "HT3", tierType: "high" },
+                { rank: 7, player: "Badie3", username: "Samorai_1", region: "NA", tier: "HT4", tierType: "high" },
+                { rank: 8, player: "Tyler", username: "its_Tyler4real", region: "NA", tier: "HT5", tierType: "high" }
+            ]
+        };
+
+        let currentCategory = 'overall';
+
+        function renderTable(data) {
+            const tbody = document.getElementById('rankingsTable');
+            tbody.innerHTML = '';
+
+            data.forEach(player => {
+                const row = document.createElement('tr');
+                const skinUrl = `https://mc-heads.net/avatar/${player.username}/32`;
+                
+                if (currentCategory === 'overall') {
+                    // For overall, show all game tiers
+                    row.innerHTML = `
+                        <td class="rank-col">#${player.rank}</td>
+                        <td class="player-col">
+                            <img src="${skinUrl}" alt="${player.player}" class="player-skin">
+                            <span>${player.player}</span>
+                        </td>
+                        <td class="region-col">${player.region}</td>
+                        <td>
+                            <span class="tier-badge">
+                                <img src="pict/vanilla_${player.vanilla.toLowerCase()}.png" alt="${player.vanilla}" title="${player.vanilla}">
+                            </span>
+                        </td>
+                        <td>
+                            <span class="tier-badge">
+                                <img src="pict/diasmp_${player.diasmp.toLowerCase()}.png" alt="${player.diasmp}" title="${player.diasmp}">
+                            </span>
+                        </td>
+                        <td>
+                            <span class="tier-badge">
+                                <img src="pict/sword_${player.sword.toLowerCase()}.png" alt="${player.sword}" title="${player.sword}">
+                            </span>
+                        </td>
+                        <td>
+                            <span class="tier-badge">
+                                <img src="pict/mace_${player.mace.toLowerCase()}.png" alt="${player.mace}" title="${player.mace}">
+                            </span>
+                        </td>
+                    `;
+                } else {
+                    // For other categories, show single tier
+                    const imagePath = `pict/${currentCategory}_${player.tier.toLowerCase()}.png`;
+                    row.innerHTML = `
+                        <td class="rank-col">#${player.rank}</td>
+                        <td class="player-col">
+                            <img src="${skinUrl}" alt="${player.player}" class="player-skin">
+                            <span>${player.player}</span>
+                        </td>
+                        <td class="region-col">${player.region}</td>
+                        <td>
+                            <span class="tier-badge">
+                                <img src="${imagePath}" alt="${player.tier}" title="${player.tier}">
+                            </span>
+                        </td>
+                    `;
+                }
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentCategory = this.dataset.category;
+                
+                // Update table headers based on category
+                const thead = document.querySelector('thead tr');
+                if (currentCategory === 'overall') {
+                    thead.innerHTML = `
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Region</th>
+                        <th>Vanilla</th>
+                        <th>DiaSmp</th>
+                        <th>Sword</th>
+                        <th>Mace</th>
+                    `;
+                } else {
+                    thead.innerHTML = `
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Region</th>
+                        <th>Tier</th>
+                    `;
+                }
+                
+                renderTable(rankingsData[currentCategory]);
+            });
+        });
+
+        renderTable(rankingsData[currentCategory]);
+    </script>
+</body>
+</html>
